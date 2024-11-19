@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "23/wGTsYal0hcPLQY0Jv7sAcX+pP7gytnO0wXW+zEjU=",
+  "Source": "ATMBank",
+  "BasePath": "_content/ATMBank",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
