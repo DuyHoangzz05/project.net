@@ -24,8 +24,7 @@ namespace ATMBank.Controllers
         public IActionResult Login([FromBody] LoginDto loginDto)
         {
             // Kiểm tra người dùng có tồn tại hay không
-            var user = _context.Users.FirstOrDefault(u => u.Email == loginDto.Email);
-            if (user == null)
+            var user = _context.Users.FirstOrDefault(u => u.Email == loginDto.Email);            if (user == null)
             {
                 return Unauthorized("Tên người dùng hoặc mật khẩu không đúng");
             }
@@ -40,9 +39,9 @@ namespace ATMBank.Controllers
             // Nếu đăng nhập thành công, trả về thông tin người dùng và token giả
             var userResponse = new
             {
-                Email = user.Email, 
-                Password = passwordHash,
-                 // Tên người dùng
+               UserId = user.UserId,         // ID người dùng
+               Name = user.Name,         // Tên người dùng
+               Email = user.Email, 
                 //Avatar = user.Avatar,  // Avatar người dùng (nếu có)
                 Token = GenerateFakeJwtToken() // Token giả (có thể thay thế bằng JWT thực tế)
             };

@@ -5,6 +5,8 @@ using System.Security.Principal;
 namespace ATMBank.Models{
     public class LoginDto{
         [Key]//Annotation -> primary key
+        public string Name { get; set; }
+
         public string Email { get; set; }
         public string Password { get; set; }
 

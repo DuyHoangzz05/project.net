@@ -1,5 +1,9 @@
 using ATMBank.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình kết nối tới CSDL
@@ -20,6 +24,24 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Thêm JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false; // Chỉ cần false khi đang trong môi trường phát triển, production nên bật true
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])) // Secret key dùng để ký JWT
+        };
+    });
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,8 +58,11 @@ if (app.Environment.IsDevelopment())
 // Áp dụng chính sách CORS cho toàn bộ ứng dụng
 app.UseCors("AllowReactApp");
 
-app.UseHttpsRedirection();
+// Sử dụng Authentication và Authorization
+app.UseAuthentication(); // Đảm bảo đặt trước UseAuthorization
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
